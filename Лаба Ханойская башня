@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+void hanoi(int N, int start, int end) {
+	if (N == 1) {
+		cout << "Перекладываем " << N << " диск c " << start << " на " << end << endl;
+
+	}
+	else {
+		int temp = 6 - start - end;
+		hanoi(N - 1, start, temp);
+		cout << "Перекладываем " << N << " диск c " << start << " на " << end << endl;
+		hanoi(N - 1, temp, end);
+
+	}
+
+}
+
+int main() {
+	setlocale(LC_ALL, "Rus");
+	int N;
+	cout << "Введите кол-во дисков на стержне: ";
+	cin >> N;
+
+	hanoi(N, 1, 3);
+	return 0;
+}
