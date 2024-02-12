@@ -1,0 +1,17 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+double x, n;
+
+int main() {
+	setlocale(LC_ALL, "Ru");
+	cout << "Введите n:";
+	cin >> n;
+	cout << endl << "Введите x:";
+	cin >> x;
+	double s = x;
+	for (int i = 1; i <= n; i++) {
+		s += pow(x, (2 * i + 1)) / 4*i*i-1;
+	}
+	cout << endl << "Ответ:" << s;
+}
