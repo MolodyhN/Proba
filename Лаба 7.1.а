@@ -1,0 +1,40 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+int max_element(int n, int a[],int b)
+{
+	for (int i = 1; i < b; i++)
+		cout << pow(a[i], n)<< endl;
+	return 0;
+}
+long max_element(int n, long a[],int b)
+// находит максимальный элемент для массива типа long
+{
+	for (int i = 1; i < b; i++)
+		cout << pow(a[i], n) << endl;
+	return 0;
+}
+double max_element(int n, double a[],int b)
+// находит максимальный элемент для массива типа double
+{
+	for (int i = 1; i < b; i++)
+		cout << pow(a[i], n) << endl;
+	return 0;
+}
+float max_element(int n, float a[],int b)
+// находит максимальный элемент для массива типа float
+{
+	for (int i = 1; i < b; i++)
+		cout << pow(a[i], n) << endl;
+	return 0;
+}
+int main() {
+	int n;
+	setlocale(LC_ALL, "Ru");
+	cout << "Введите n:";
+	cin >> n;
+	int a[5] = { 1,2,3,4,5 };
+	int b = 5;
+	max_element(n, a, b);
+
+}
