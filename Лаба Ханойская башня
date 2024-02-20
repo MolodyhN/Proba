@@ -1,32 +1,45 @@
-// Ханойские башни
-#include <iostream>
-
+#include<iostream>
+#include<math.h>
 using namespace std;
 
-void hanoi_towers(int kolza, int from, int to, int xz)  //kolza-число колец, from-начальное положение колец(1-3),to-конечное положение колец(1-3)
-{                               //xz - промежуточный колышек(1-3)
-    if (kolza != 0)
-    {
-        hanoi_towers(kolza - 1, from, xz, to);       //спускаемся на одно кольцо
-
-        cout << from << " -> " << to << endl;
-
-        hanoi_towers(kolza - 1, xz, to, from);      //меняем местами стержни из которого и на который
-    }
-}
-
-int main()
+int max_element(int n, int a[], int b)
 {
-    setlocale(LC_ALL, "rus");
-    int a, b, c, n;
-    cout << "Номер первого столбика:" << endl;
-    cin >> a;
-    cout << "Номер конечного столбика:" << endl;
-    cin >> b;
-    c = abs(a - b);
-    cout << "Количество дисков:" << endl;
-    cin >> n;
+	int c = 1 / n;
+	for (int i = 1; i < b; i++)
+		cout << "Возведенная в степень:" << pow(a[i], n) << "Извлеченный корень:" << pow(a[i], c) << endl;
+	return 0;
+}
+long max_element(int n, long a[], int b)
+// находит максимальный элемент для массива типа long
+{
+	int c = 1 / n;
+	for (int i = 1; i < b; i++)
+		cout << "Возведенная в степень:" << pow(a[i], n) << "Извлеченный корень:" << pow(a[i], c) << endl;
+	return 0;
+}
+double max_element(int n, double a[], int b)
+// находит максимальный элемент для массива типа double
+{
+	int c = 1 / n;
+	for (int i = 1; i < b; i++)
+		cout << "Возведенная в степень:" << pow(a[i], n) << "Извлеченный корень:" << pow(a[i], c) << endl;
+	return 0;
+}
+float max_element(int n, float a[], int b)
+// находит максимальный элемент для массива типа float
+{
+	int c = 1 / n;
+	for (int i = 1; i < b; i++)
+		cout << "Возведенная в степень:" << pow(a[i], n) << "Извлеченный корень:" << pow(a[i], c) << endl;
+	return 0;
+}
+int main() {
+	int n;
+	setlocale(LC_ALL, "Ru");
+	cout << "Введите n:";
+	cin >> n;
+	int a[5] = { 1,2,3,4,5 };
+	int b = 5;
+	max_element(n, a, b);
 
-    hanoi_towers(n, a, b, c);        //вызов функции
-    return 0;
 }
