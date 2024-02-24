@@ -1,0 +1,32 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main(){
+	setlocale(LC_ALL, "Ru");
+	ifstream fin("F1.txt");
+	ofstream fout("F2.txt");
+	string str;
+	while (!fin.eof()) {
+		str = "";
+		getline(fin, str);
+		if (str.back() == 'A') {
+			fout << str << endl;
+		}
+	}
+	ifstream fin1("F2.txt");
+	int mx = 0;
+	int i = 0;
+	int z = 0;
+	while (!fin1.eof()) {
+		str = "";
+		getline(fin1, str);
+		++i;
+		if (count(str.begin(), str.end(), 'A') > mx) {
+			mx = count(str.begin(), str.end(), 'A');
+			z = i;
+		}
+	}
+	cout << "Наибольшее кол-во А в строке с номером:" << z;
+}
