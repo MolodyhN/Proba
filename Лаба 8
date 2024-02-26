@@ -1,0 +1,83 @@
+#include<iostream>
+#include<string>
+#include<fstream>
+using namespace std;
+
+struct avtomobil{
+string marka;
+int price;
+string color;
+int god;
+
+void info(string m, int p, string c, int g) {
+marka = m;
+price = p;
+color = c;
+god = g;
+    }
+};
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    system("chcp 1275");
+    system("cls");
+    string m, c;
+    int p ,g;
+    int kol_avto;
+    avtomobil mass[50];
+
+    cout << "Введите кол-во автомобилей: ";
+    cin >> kol_avto;
+
+    for (int i = 1; i <= kol_avto; i++) {
+        cout << "Марка:";
+        cin >> m;
+        cout << "Цена:";
+        cin >> p;
+        while (p == 0) {
+            cout << "Нельзя бесплатно!!!" << endl << "Цена:";
+            cin >> p;
+        }
+        cout << "Цвет:";
+        cin >> c;
+        cout << "Год выпуска:";
+        cin >> g;
+        cout << "__________________________" << endl;
+        mass[i].info(m ,p ,c ,g);
+    }
+
+    int reg;
+
+    cout << "Введите минимальный год выпуска: ";
+    cin >> reg;
+
+    for (int i = 1; i < kol_avto; i++) {
+        if (mass[i].god < reg) {
+            mass[i].price=0;
+        }
+    }
+
+   
+
+        cout << endl << "Для нового автомобиля введите " << endl;
+        cout << "Марка:";
+        cin >> m;
+        cout << "Цена:";
+        cin >> p;
+        cout << "Цвет:";
+        cin >> c;
+        cout << "Год выпуска:";
+        cin >> g;
+        mass[0].info(m, p, c, g);
+        
+
+        ofstream f1("f1.txt");
+
+        for (int i = 0; i < kol_avto; i++) {
+            if (mass[i].price != 0) {
+                f1 << mass[i].marka << " " << mass[i].price << " " << mass[i].color << " " << mass[i].god << endl;
+            }
+        }
+        f1.close();
+        return 0;
+}
