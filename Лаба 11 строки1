@@ -1,0 +1,93 @@
+#include<iostream>
+using namespace std;
+
+struct Node {
+    char key;
+    Node* next;
+};
+
+struct List {
+    Node* head_node = nullptr;
+    Node* tail_node = nullptr;
+};
+
+void pushBack(List& list, char key) {
+    Node* new_node = new Node;
+    new_node->key = key;
+    new_node->next = nullptr;
+    if (list.head_node == nullptr) {
+        list.head_node = new_node;
+        list.tail_node = new_node;
+    }
+    else {
+        list.tail_node->next = new_node;
+        list.tail_node = new_node;
+    }
+}
+
+void popfront(List& list, int k) {
+    for (int i = 0; i < k; i++) {
+        if (list.head_node == nullptr) {
+            return;
+        }
+        Node* remove = list.head_node;
+        list.head_node = list.head_node->next;
+        delete remove;
+    }
+}
+
+void InsertItems(List& list, char k, char b) {
+    Node* current = list.head_node;
+    while (current != nullptr) {
+        if (current->key == k) {
+            Node* new_node = new Node;
+            new_node->key = b;
+            new_node->next = current->next;
+            current->next = new_node;
+            break; // Added break statement to exit loop after first occurrence
+        }
+        current = current->next;
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    List list;
+    cout << "Введите размер списка:" << endl;
+    int n;
+    cin >> n;
+    cout << endl << "Введите элементы списка:" << endl;
+    char k;
+    for (int i = 0; i < n; i++) {
+        cin >> k;
+        pushBack(list, k);
+    }
+    Node* current_node = list.head_node;
+    while (current_node != nullptr) {
+        cout << current_node->key << ' ';
+        current_node = current_node->next;
+    }
+
+    cout << endl << "Введите сколько элементов нужно удалить: ";
+    cout << endl;
+    int g; // Changed type of variable g to int
+    char b;
+    cin >> g;
+    cout << "Введите символ после которого надо добавить: ";
+    cin >> k; // Changed variable name to k
+    cout << "Введите символ который надо добавить: ";
+    cin >> b;
+    popfront(list, g);
+    InsertItems(list, k, b);
+
+    current_node = list.head_node;
+    if (current_node == nullptr) { // Changed = to ==
+        cout << "список пуст";
+    }
+    while (current_node != nullptr) {
+        cout << current_node->key << ' ';
+        current_node = current_node->next;
+    }
+
+    return 0;
+}
