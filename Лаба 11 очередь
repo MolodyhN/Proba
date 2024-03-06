@@ -1,0 +1,113 @@
+#include<iostream>
+using namespace std;
+struct Node {
+    char data;
+    Node* next;
+};
+
+struct Queue {
+    int size = 0;
+    Node* head;
+    Node* tail;
+};
+
+void init_que(Queue& q, const char a) {
+    Node* new_node = new Node;
+    new_node->data = a;
+    q.head = new_node;
+    q.tail = new_node;
+    q.size = 1;
+}
+void push(Queue& q, char a) {
+    Node* new_node = new Node;
+    q.size++;
+    new_node->data = a;
+    new_node->next = nullptr;
+    q.tail->next = new_node;
+    q.tail = new_node;
+}
+void print(Queue& q) {
+    Node* tmp = q.head;
+    cout << "начало-> ";
+    while (tmp != nullptr) {
+        cout << tmp->data << "->";
+        tmp = tmp->next;
+    }
+    cout << "конец";
+}
+void pop(Queue& q) {
+    Node* delete_node = q.head;
+    q.head = q.head->next;
+    q.size--;
+    delete delete_node;
+
+}
+void delete_key(Queue& q, char key) {
+    int i = 1;
+    char key1;
+    Node* current = q.head->next;
+    cout << "Введите какой элемент добавить:";
+    cin >> key1;
+    push(q, q.head->data);
+    while (i < q.size -2) {
+        if (current->data == key) {
+            push(q, key1);
+        }
+        push(q, current->data);
+        pop(q);
+        i++;
+        current = current->next;
+    }
+    pop(q);
+}
+void insert(Queue& q, int k) {
+    int n = q.size;
+    Node* current = q.head;
+    push(q, current->data);
+    for (int i = 0; i < n - k - 1; i++) {
+        current = current->next;
+        push(q, current->data);
+    }
+    for (int i = 0; i < n; i++) {
+        pop(q);
+    }
+    cout << endl;
+}
+
+void new_que(Queue& q, int n) {
+    char a;
+    cout << "Введите первый элемент в очереди: ";
+    cin >> a;
+    init_que(q, a);
+    for (int i = 1; i < n; i++) {
+        cout << "Введите элемент в очереди: ";
+        cin >> a;
+        push(q, a);
+    }
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Rus");
+    Queue q;
+    int n, k;
+    cout << "Введите размер очереди: ";
+    cin >> n;
+    new_que(q, n);
+    cout << "Очередь выглядит так: ";
+    print(q);
+    char key;
+    cout << endl;
+    cout << "Введите кол-во элементов, которые нужно удалить из очереди: ";
+    cin >> k;
+    insert(q, k);
+    cout << "Полученная очередь: ";
+    print(q);
+    cout << endl << "Введите элемент, после которого надо добавить: ";
+    cin >> key;
+    delete_key(q, key);
+    cout << endl;
+    cout << "Полученная очередь: ";
+    print(q);
+    return 0;
+}
