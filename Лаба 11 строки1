@@ -1,14 +1,14 @@
 #include<iostream>
 using namespace std;
 
-struct Node {
-    char key;
-    Node* next;
+struct Node{
+char key;
+Node* next;
 };
 
-struct List {
-    Node* head_node = nullptr;
-    Node* tail_node = nullptr;
+struct List{
+Node * head_node = nullptr;
+Node* tail_node = nullptr;
 };
 
 void pushBack(List& list, char key) {
@@ -17,15 +17,16 @@ void pushBack(List& list, char key) {
     new_node->next = nullptr;
     if (list.head_node == nullptr) {
         list.head_node = new_node;
-        list.tail_node = new_node;
     }
     else {
-        list.tail_node->next = new_node;
-        list.tail_node = new_node;
+        Node* curent = list.head_node;
+        while (curent->next != nullptr) {
+            curent = curent->next;
+        }
+        curent->next = new_node;
     }
 }
-
-void popfront(List& list, int k) {
+void popfront(List& list,int k) {
     for (int i = 0; i < k; i++) {
         if (list.head_node == nullptr) {
             return;
@@ -34,19 +35,19 @@ void popfront(List& list, int k) {
         list.head_node = list.head_node->next;
         delete remove;
     }
+
 }
 
-void InsertItems(List& list, char k, char b) {
-    Node* current = list.head_node;
-    while (current != nullptr) {
-        if (current->key == k) {
+void InsertItems(List& list, char k,char b) {
+    Node* curent = list.head_node;
+    while (curent->next != nullptr) {
+        curent = curent->next;
+        if (curent->key == k) {
             Node* new_node = new Node;
             new_node->key = b;
-            new_node->next = current->next;
-            current->next = new_node;
-            break; // Added break statement to exit loop after first occurrence
+            new_node->next = curent->next;
+            curent->next = new_node;
         }
-        current = current->next;
     }
 }
 
@@ -56,12 +57,13 @@ int main() {
     cout << "Введите размер списка:" << endl;
     int n;
     cin >> n;
-    cout << endl << "Введите элементы списка:" << endl;
+    cout << endl << "Введите эл-ты списка:" << endl;
     char k;
     for (int i = 0; i < n; i++) {
         cin >> k;
         pushBack(list, k);
     }
+
     Node* current_node = list.head_node;
     while (current_node != nullptr) {
         cout << current_node->key << ' ';
@@ -70,19 +72,18 @@ int main() {
 
     cout << endl << "Введите сколько элементов нужно удалить: ";
     cout << endl;
-    int g; // Changed type of variable g to int
-    char b;
-    cin >> g;
+    char g,b;
+    cin >> k;
     cout << "Введите символ после которого надо добавить: ";
-    cin >> k; // Changed variable name to k
+    cin >> g;
     cout << "Введите символ который надо добавить: ";
     cin >> b;
-    popfront(list, g);
-    InsertItems(list, k, b);
+    popfront(list, k);
+    InsertItems(list, g, b);
 
     current_node = list.head_node;
-    if (current_node == nullptr) { // Changed = to ==
-        cout << "список пуст";
+    if (current_node = nullptr) {
+        cout << "пизда"
     }
     while (current_node != nullptr) {
         cout << current_node->key << ' ';
@@ -91,3 +92,4 @@ int main() {
 
     return 0;
 }
+
