@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+void createtable(string& pattern, int d[]) {
+	int len = pattern.length();
+	for (int i = 0; i < 256; i++) {
+		d[i] = len;
+	}
+	for (int i = 0; i < len - 1; i++) {
+		d[(unsigned char)pattern[i]] = len - i - 1;
+	}
+}
+void bormyr(string& text, string& pattern) {
+	int patlen = pattern.length();
+	int txtlen = text.length();
+	int d[256];
+	createtable(pattern, d);
+	bool f = false;
+	for (int i = patlen - 1; i < txtlen; i += d[(unsigned char)text[i]]) {
+		int k = 0;
+		while (k < patlen && pattern[patlen - 1 - k] == text[i - k]) {
+			k++;
+		}
+		if (k == patlen) {
+			cout << "Образ находиться по индексу:" << i - patlen - 1;
+			f = 1;
+		}
+	}
+	if (!f) {
+		cout << "В строке образ не найден" << endl;
+	}
+
+}
+int main()
+{
+	system("chcp 1251>NULL") ;
+	string a, b;
+	cout << "введите строку:";
+	getline(cin, a);
+	cout << "Введите образ для списка: ";
+	getline(cin, b);
+	bormyr(a, b);
+}
+
