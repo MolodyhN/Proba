@@ -1,0 +1,32 @@
+#include<iostream>
+using namespace std;
+
+
+class ArifmProgress {
+private:
+	double first;
+	double second;
+public:
+	void SetFirst(double x) {
+		this->first = x;
+		cout << "Оклад: " << first << endl;
+	}
+	void SetSecond(double y) {
+		this->second = y;
+		cout << "Кол-во отработаных дней: " << second << endl;
+	}
+	double summa() {
+		cout << "Оклад ( " << first << " ) " << " мы делаем на 30 рабочих дней и" << " умножаем на " << "кол-во отработанных дней (" << second << ")" << endl;
+		return first / 30 * second;
+	}
+};
+
+int main() {
+	setlocale(LC_ALL, "Rus");
+	ArifmProgress prog;
+	prog.SetFirst(70000.5);
+	prog.SetSecond(3);
+	cout << "Ответ: " << prog.summa() << endl;
+
+	return 0;
+}
