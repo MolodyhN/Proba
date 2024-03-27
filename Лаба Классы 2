@@ -1,0 +1,77 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+class automobil {
+private:
+	string Marka;
+	string Model;
+	int price;
+
+public:
+	automobil () {
+		Marka = "noname";
+		Model = "noname";
+		price = 0;
+		cout << "Вызовконструктораспараметрами: " << this->Marka << " " << this->Model << " " << this->price << endl;
+	}
+	automobil(string Marka, string Model, int price) {
+		this->Marka = Marka;
+		this->Model = Model;
+		this->price = price;
+		cout << "Вызовконструктораспараметрами: " << this->Marka << " " << this->Model << " " << this->price << endl;
+	}
+	automobil(const automobil& d) {
+		Marka = d.Marka;
+		Model = d.Model;
+		price = d.price;
+		cout << "Вызовконструктораспараметрами: " << this->Marka << " " << this->Model << " " << this->price << endl;
+	}
+	void SetMARKA(string name) {
+		Marka = name;
+	}
+	void SetMODEL(string model) {
+		Model = model;
+	}
+	void SetPRICE(double price) {
+		price = price;
+	}
+	string GetMARKA() {
+		return Marka;
+	}
+	string GetMODEL() {
+		return Model;
+	}
+	int GetPRICE() {
+		return price;
+	}
+
+	void Print() {
+		cout << "Марка: " << Marka << endl << "Модель: " << Model << endl << "Стоимость: " << price << endl;
+	}
+	~automobil() {
+		cout << "Удаление коснтруктора" << endl;
+	}
+
+};
+
+
+int main() {
+	system("chcp 1251>NULL");
+	automobil h1;
+	automobil h2("Молодых Никита Андреевич", "Бог", 77);
+	automobil h3(h2);
+	automobil h4;
+	h4.SetMARKA("Сингур Иван Сергеевич");
+	h4.SetMODEL("Чушпан");
+	h4.SetPRICE(48);
+	cout << endl;
+	cout << "Марка: " << h4.GetMARKA() << endl;
+	cout << "Модель: " << h4.GetMODEL() << endl;
+	cout << "Стоимость: " << h4.GetPRICE() << endl;
+	cout << endl;
+	//h4.Print();
+	cout << endl;
+	return 0;
+
+}
