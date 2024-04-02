@@ -1,0 +1,70 @@
+#include <iostream> 
+using namespace std;
+
+class Money {
+private:
+    int long rubles;
+    int kopecks;
+public:
+    void setinfo(int long a, int b) {
+        this->rubles = a;
+        this->kopecks = b;
+    }
+    void getinfo(int long a, int b) {
+        cout << rubles << " рублей " << kopecks << " копеек" << endl;
+    }
+    void comparison(int long rubles2, int kopecks2) {
+        if (this->rubles != rubles2) {
+            if (this->rubles > rubles2) {
+                cout << "Наибольшее: " << rubles << ',' << kopecks;
+            }
+            else {
+                cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+            }
+        }
+        else {
+            if (this->kopecks > kopecks2) {
+                cout << "Наибольшее: " << rubles << ',' << kopecks;
+            }
+            else {
+                cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+            }
+        }
+    }
+    Money& operator++() {
+        ++this->kopecks;
+        return *this;
+    }
+
+    int operator++(int) {
+        int tempK = this->kopecks;
+        this->kopecks++;
+        return tempK;
+    }
+
+};
+
+int main() {
+    Money Big;
+    int long a;
+    int b;
+    system("chcp 1251 > NULL");
+    cout << "Введите кол-во рублей:";
+    cin >> a;
+    cout << "Введите кол-во копеек:";
+    cin >> b;
+    Big.setinfo(a, b);
+    Big.getinfo(a, b);
+    cout << "префиксная:" << endl;
+    ++Big;
+    Big.getinfo(a, b);
+    cout << "постфиксная:" << endl;
+    cout << a << " рублей " << Big++ << " копеек" << endl;
+    Big.getinfo(a, b);
+    cout << "______________________________" << endl;
+    cout << "Введите кол-во рублей:";
+    cin >> a;
+    cout << "Введите кол-во копеек:";
+    cin >> b;
+    Big.comparison(a, b);
+}
