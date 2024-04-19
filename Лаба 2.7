@@ -1,0 +1,248 @@
+#include <iostream>
+using namespace std;
+
+class Iterator;
+
+
+class Iterator
+{
+	friend class vector;
+private:
+	int size;
+	int* data;
+	Iterator* beg; //возвращает указатель на первый элемент 
+	Iterator* end; //возвращает указатель на элемент следующий за последним 
+public:
+	int get_data() const
+	{
+		return *elem;
+	}
+	int set_data(int temp) {
+		*elem = temp;
+	}
+	int len() const {
+		return size;
+	}
+	int* elem;
+	Iterator() { elem = 0; } //конструктор без параметров 
+	Iterator(const Iterator& it) { elem = it.elem; }//конструктор копирования 
+
+	bool operator==(const Iterator& it) { return elem == it.elem; } //перегруженные операции сравнения 
+	bool operator!=(const Iterator& it) { return elem != it.elem; }
+
+	//перегруженная операция инкремент 
+	void operator++(int) {
+		++elem;
+	}
+	//перегруженная операция декремент 
+	void operator--() {
+		--elem;
+	}
+	//перегруженная операция разыменования  
+	int* operator *() const {
+		return elem;
+	}
+};
+
+template<class T>
+class Vector
+{
+	friend class Iterator;
+private:
+	T size;
+	T* data;
+	Iterator beg; //возвращает указатель на первый элемент
+	Iterator end; //возвращает указатель на элемент следующий за последним
+public:
+	Iterator first() { return beg; }   //возвращает указатель на первы
+	Iterator last() { return end; }   //возвращает указатель на элемен
+	int len() const {
+		return size;
+	}
+	int get_data(T n) const
+	{
+		return data[n];
+	}
+	void set_data(T i, T temp) {
+		data[i] = temp;
+	}
+
+	Vector() {
+		size = 0;
+		data = 0;
+	}
+
+	Vector(T s, T k = 0) {
+		size = s;
+		data = new int[size];
+		for (int i = 0; i < size; i++) {
+			data[i] = k;
+		}
+		beg.elem = &data[0];
+		end.elem = &data[size];
+	}
+	Vector(const Vector& a) {
+		size = a.size;
+		data = new int[size];
+		for (int i = 0; i < size; i++) {
+			data[i] = a.data[i];
+		}
+		beg = a.beg;
+		end = a.end;
+	}
+	~Vector() {
+		cout << endl << "Удаление конструктора";
+	}
+	Vector& operator=(const Vector& a) {
+		if (this == &a) {
+			return *this;
+		}
+		size = a.size;
+		if (data != 0) {
+			delete[]data;
+		}
+		data = new int[size];
+		for (int i = 0; i < size; i++) {
+			data[i] = a.data[i];
+		}
+		beg = a.beg;
+		end = a.end;
+		return *this;
+	}
+	int& operator[](T index) {
+		if (index < size) {
+			return data[index];
+		}
+		else {
+			cout << "EROR:Индекс больше размера!!!";
+		}
+	}
+	int& operator+() {
+	}
+};
+
+template<class T, class Y>
+class Money {
+private:
+	T rubles;
+	Y kopecks;
+public:
+	void setinfo(T a, Y b) {
+		this->rubles = a;
+		this->kopecks = b;
+	}
+	void getinfo(T a, Y b) {
+		cout << rubles << " рублей " << kopecks << " копеек" << endl;
+	}
+	void comparison(T rubles2, Y kopecks2) {
+		if (this->rubles != rubles2) {
+			if (this->rubles > rubles2) {
+				cout << "Наибольшее: " << rubles << ',' << kopecks;
+			}
+			else {
+				cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+			}
+		}
+		else {
+			if (this->kopecks > kopecks2) {
+				cout << "Наибольшее: " << rubles << ',' << kopecks;
+			}
+			else {
+				cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+			}
+		}
+	}
+	Money& operator++() {
+		++this->kopecks;
+		return *this;
+	}
+
+	int operator++(int) {
+		int tempK = this->kopecks;
+		this->kopecks++;
+		return tempK;
+	}
+
+};
+
+
+ostream& operator<<(ostream& out, const Vector<int>& a)
+{
+	for (int i = 0; i < a.len(); ++i) {
+		out << a.get_data(i) << " ";
+	}
+	return out;
+}
+
+istream& operator>>(istream& in, Vector<int>& a)
+{
+	for (int i = 0; i < a.len(); ++i) {
+		int temp;
+		in >> temp;
+		a.set_data(i, temp);
+	}
+	return in;
+}
+
+ostream& operator<<(ostream& out, const Iterator& a)
+{
+	out << a.get_data() << " ";
+	return out;
+}
+void summ(Vector<int>& a, Vector<int>& b) {
+	int size;
+	if (a.len() <= b.len()) {
+		size = a.len();
+	}
+	else {
+		size = b.len();
+	}
+	cout << " ";
+	for (int i = 0; i < size; i++) {
+		cout << a[i] + b[i] << " ";
+	}
+}
+
+int main() {
+	int size;
+	system("chcp 1251 > NULL");
+	cout << "Введите размер:";
+	cin >> size;
+	Vector<int> a1(size);   //создали вектор из 5 эле 
+	cout << a1 << "\n";   //вывели значения элеме 
+	cin >> a1;   //ввели с клавиатуры значения 
+	cout << a1 << "\n";    //вывели значения элеме 
+	a1[2] = 100;   //используя операцию [] прис 
+	cout << a1 << "\n";   //вывели значения элеме 
+	cout << "Введите размер:";
+	cin >> size;
+	Vector<int> b1(size);   //создали вектор в из 1 
+	//cout << b << "\n";   //вывели значения элеме 
+	b1 = a1;   //присвоили вектору в значения ве 
+	cout << b1 << "\n";    //вывели значения элем 
+	cout << "_________________________________________________--" << endl;
+	summ(a1, b1);
+	cout << endl << "_________________________________________________--" << endl;
+	Money<int long, int> Big;
+	int long a;
+	int b;
+	cout << "Введите кол-во рублей:";
+	cin >> a;
+	cout << "Введите кол-во копеек:";
+	cin >> b;
+	Big.setinfo(a, b);
+	Big.getinfo(a, b);
+	cout << "префиксная:" << endl;
+	++Big;
+	Big.getinfo(a, b);
+	cout << "постфиксная:" << endl;
+	cout << a << " рублей " << Big++ << " копеек" << endl;
+	Big.getinfo(a, b);
+	cout << "______________________________" << endl;
+	cout << "Введите кол-во рублей:";
+	cin >> a;
+	cout << "Введите кол-во копеек:";
+	cin >> b;
+	Big.comparison(a, b);
+}
+
