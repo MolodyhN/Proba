@@ -1,0 +1,354 @@
+#include <iostream> 
+#include <string> 
+using namespace std;
+const int evNothing = 0;
+const int evMessage = 100;
+const int cmAdd = 1;
+const int cmDel = 2;
+const int cmGet = 3;
+const int cmShow = 4;
+const int cmMake = 6;
+const int cmQuit = 101;
+
+struct TEvent {
+	int what;
+	union
+	{
+		int command;
+		struct
+		{
+			int message;
+			int a;
+		};
+	};
+};
+
+class Object
+{
+public:
+	Object() {};
+	~Object() {};
+	virtual void show() = 0;
+	virtual void GetName() = 0;
+	virtual void input() = 0;
+	virtual void HandlEvent(const TEvent& e) = 0;
+};
+
+class Print : public Object
+{
+protected:
+	string name;
+	int cilindri;
+	int range;
+public:
+	void GetName() {
+		cout << name << endl;
+	}
+
+	Print() {
+		name = "no";
+		cilindri = 0;
+		range = 0;
+	}
+	Print(string name, int cilindri, int range) {
+		this->name = name; this->cilindri = cilindri; this->range = range;
+	}
+
+	void show() {
+		cout << "Марка: " << name << "\nЧисло целиндров: " << cilindri << "\nМощность: " << range << endl;
+	}
+
+	void input() {
+		cout << "Введите марку: ";
+		cin >> this->name;
+		cout << "Число целиндров: ";
+		cin >> cilindri;
+		cout << "Мощность: ";
+		cin >> range;
+	}
+
+	void setName(string name) {
+		this->name = name;
+	}
+
+	void setcilindri(int cilindri) {
+		this->cilindri = cilindri;
+	}
+
+	void setrange(int range) {
+		this->range = range;
+	}
+
+	string getName() {
+		return name;
+	}
+
+	int getcilindri() {
+		return cilindri;
+	}
+	int getrange() {
+		return range;
+	}
+	void HandlEvent(const TEvent& e) {
+		if (e.what == evMessage)
+			switch (e.command)
+			{
+			case cmGet:
+				cout << "Название: " << getName() << endl;
+				break;
+			default:
+				break;
+			}
+	}
+
+};
+class Magazin : public Print
+{
+protected:
+	int pages;
+public:
+	void GetName() {
+		cout << name << endl;
+	}
+
+	Magazin() :Print::Print() {
+		pages = 0;
+	}
+
+	Magazin(string n, int a, int p, int w) : Print::Print(n, a ,w) {
+		pages = p;
+	}
+
+	void show() {
+		cout << "Марка: " << name
+			<< "\nЧисло целиндров: " << cilindri << "\nМощность: " << range << "\nХарак-ка: " << pages << endl;
+	}
+
+	void input() {
+		cout << "Введите название: ";
+		cin >> this->name;
+		cout << "Введите количество целиндров: ";
+		cin >> cilindri;
+		cout << "Введите мощность: ";
+		cin >> range;
+		cout << "Харак-ку: ";
+		cin >> pages;
+	}
+
+	int getPages() {
+		return pages;
+	}
+
+	void setPages(int p) {
+		pages = p;
+	}
+	Magazin& operator=(const Magazin& a) {
+		if (&a == this)
+			return *this;
+		name = a.name;
+		cilindri = a.cilindri;
+		range = a.range;
+		pages = a.pages;
+		return *this;
+	}
+};
+
+class Vector
+{
+protected:
+	Object** beg;
+	int size;
+	int cur;
+public:
+	Vector() {
+		beg = 0;
+		size = 0;
+		cur = 0;
+	}
+
+
+	void Add()
+	{
+		Object* p;
+		cout << "1. Машина" << endl << "2. ГрузовикМ" << endl;
+		int x;
+		cin >> x;
+		if (x == 1)
+		{
+			Print* a = new Print;
+			a->input();
+			p = a;
+			if (cur < size)
+			{
+				beg[cur] = p;
+				cur++;
+			}
+		}
+		else if (x == 2)
+		{
+			Magazin* b = new Magazin;
+			b->input();
+			p = b;
+			if (cur < size)
+			{
+				beg[cur] = p;
+				cur++;
+			}
+		}
+	}
+
+	~Vector() {
+		if (beg != 0)delete[] beg;
+		beg = 0;
+	}
+
+	Vector(int n) {
+		beg = new Object * [n];
+		cur = 0;
+		size = n;
+	}
+
+
+	void Get_Name() {
+		Object** p = beg;
+		for (int i = 0; i < cur; i++) {
+			(*p)->GetName();
+			p++;
+		}
+	}
+	void Show() {
+		if (cur == 0) {
+			cout << "Пусто." << endl;
+		}
+		Object** p = beg;
+		for (int i = 0; i < cur; i++) {
+			(*p)->show();
+			p++;
+		}
+	}
+
+	void Del() {
+		if (cur == 0)
+			return;
+		cur--;
+	}
+	void HandlEvent(const TEvent& e) {
+		if (e.what == evMessage) {
+			Object** p = beg;
+			for (int i = 0; i < cur; i++) {
+				(*p)->HandlEvent(e);
+				p++;
+			}
+		}
+	}
+
+};
+
+class Dialog : public Vector {
+protected:
+	int EndState;
+public:
+	Dialog() {
+		EndState = 0;
+	}
+
+	~Dialog() {
+
+	}
+
+	void ClearEvent(TEvent& event) {
+		event.what = evNothing;
+	}
+
+	void EndExec() {
+		EndState = 1;
+	}
+
+	void Execute()
+	{
+		TEvent event;
+		do
+		{
+			EndState = 0;
+			GetEvent(event);
+			HandleEvent(event);
+		} while (Valid());
+	}
+
+	bool Valid()
+	{
+		return EndState == 0;
+	}
+
+	void GetEvent(TEvent& event) {
+		string OpInt = "m+-szq";
+		string s;
+		char code;
+		cout << '>';
+		cin >> s;
+		code = s[0];
+		if (OpInt.find(code) >= 0) {
+			event.what = evMessage;
+			switch (code)
+			{
+			case('m'): event.command = cmMake; break;
+			case('+'): event.command = cmAdd; break;
+			case('-'): event.command = cmDel; break;
+			case('s'): event.command = cmShow; break;
+			case('z'): event.command = cmGet; break;
+			case('q'): event.command = cmQuit; break;
+			}
+		}
+		else {
+			event.what = evNothing;
+		}
+	}
+
+	void HandleEvent(TEvent& event) {
+		if (event.what == evMessage) {
+			switch (event.command)
+			{
+			case cmMake:
+				cout << "Введите размер группы: ";
+				cin >> size;
+				beg = new Object * [size];
+				cur = 0;
+				ClearEvent(event);
+				break;
+			case cmAdd:
+				Add();
+				ClearEvent(event); break;
+			case cmDel:
+				Del();
+				ClearEvent(event); break;
+			case cmShow:
+				Show();
+				ClearEvent(event); break;
+			case cmQuit:
+				EndExec();
+				ClearEvent(event); break;
+			case cmGet:
+				Get_Name();
+				ClearEvent(event); break;
+			}
+		}
+	}
+};
+
+int main() {
+	system("chcp 1251 > null");
+	cout << "m: Создать группу" << endl;
+
+	cout << "+: Добавить элемент" << endl;
+
+	cout << "-: Убрать элемент" << endl;
+
+	cout << "s: информация о членах в группе" << endl;
+
+	cout << "z: информация о названиях элементов группы" << endl;
+	cout << "q: Конец работы" << endl;
+
+	Dialog D;
+	D.Execute();
+	return 1;
+}
