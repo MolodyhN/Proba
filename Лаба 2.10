@@ -1,0 +1,354 @@
+#include<iostream>
+#include "Money.h"
+#include "file_work.h"
+
+using namespace std;
+
+int main() {
+    Money Big;
+    int long a;
+    int b;
+    system("chcp 1251 > NULL");
+    cout << "Введите кол-во рублей:";
+    cin >> a;
+    cout << "Введите кол-во копеек:";
+    cin >> b;
+    Big.setinfo(a, b);
+    Big.getinfo(a, b);
+    Money p, p1, p2;
+    int k;
+    char c;
+    char file_name[30];
+    do
+    {	//Меню
+        cout << "\n1. Создать файл";
+        cout << "\n2. Показать содержимое";
+        cout << "\n3. Удалить из файла";
+        cout << "\n4. Добавить в файл";
+        cout << "\n5. Изменить в файле";
+        cout << "\n0. Exit\n";
+        cin >> c;
+        switch (c)
+        {
+        case '1':
+            cout << "filename:";
+            cin >> file_name;
+            k = make_file(file_name);
+            if (k < 0)
+                cout << "Can't make file";
+            break;
+        case '2':
+            cout << "filename:";
+            cin >> file_name;
+            k = print_file(file_name);
+            if (k == 0)
+                cout << "Empty file\n";
+            if (k < 0)
+                cout << "Can't read file\n";
+
+            break;
+        case '3':
+            cout << "filename:";
+            cin >> file_name;
+            int nom;
+            cout << "nom?";
+            cin >> nom;
+            k = del_file(file_name, nom);
+            if (k < 0)
+                cout << "Can't read file";
+            break;
+        case '4':
+            cout << "file name:";
+            cin >> file_name;
+            cout << "nom?";
+            cin >> nom;
+            cout << "New person:";
+            //Personp1; 
+            cin >> p1;
+            k = add_file(file_name, nom, p1);
+            if (k < 0)
+                cout << "Can't read file";
+            if (k == 0)
+                k = add_end(file_name, p1);
+            break;
+        case '5':
+            cout << "file name:";
+            cin >> file_name;
+            cout << "nom?";
+            cin >> nom;
+            cout << "New person:";
+            //Personp2; 
+            cin >> p2;
+            k = change_file(file_name, nom, p2);
+            if (k < 0)
+                cout << "\nCan't read file";
+            if (k == 0)
+                cout << "\nNotsuchrecord";
+            break;
+        }
+    } while (c != 0);
+}
+//Money.h
+#pragma once
+#include <iostream> 
+#include <fstream>
+using namespace std;
+
+class Money {
+private:
+    int long rubles;
+    int kopecks;
+public:
+    void setinfo(int long a, int b) {
+        this->rubles = a;
+        this->kopecks = b;
+    }
+    void getinfo(int long a, int b) {
+        cout << rubles << " рублей " << kopecks << " копеек" << endl;
+    }
+    int getrubles() const {
+        return rubles;
+    }
+    int getkopecks() const {
+        return kopecks;
+    }
+    void comparison(int long rubles2, int kopecks2) {
+        if (this->rubles != rubles2) {
+            if (this->rubles > rubles2) {
+                cout << "Наибольшее: " << rubles << ',' << kopecks;
+            }
+            else {
+                cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+            }
+        }
+        else {
+            if (this->kopecks > kopecks2) {
+                cout << "Наибольшее: " << rubles << ',' << kopecks;
+            }
+            else {
+                cout << "Наибольшее: " << rubles2 << ',' << kopecks2;
+            }
+        }
+    }
+    Money& operator++() {
+        ++this->kopecks;
+        return *this;
+    }
+
+    int operator++(int) {
+        int tempK = this->kopecks;
+        this->kopecks++;
+        return tempK;
+    }
+    Money operator=(const Money& p) {
+        if (&p == this) {
+            return *this;
+        }
+        rubles = p.rubles;
+        kopecks = p.kopecks;
+        return *this;
+    }
+};
+    Money operator-(Money& h, Money& p)  {
+    h.setinfo(h.getrubles() - p.getrubles(),h.getkopecks()- p.getkopecks());
+    return h;
+}
+bool operator>(Money& h, Money& p) {
+    if (h.getrubles() >= p.getrubles()) {
+        if (h.getrubles() == p.getrubles()) {
+            if (h.getkopecks() > p.getkopecks()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+bool operator<(Money& h, Money& p) {
+    if (h.getrubles() <= p.getrubles()) {
+        if (h.getrubles() == p.getrubles()) {
+            if (h.getkopecks() < p.getkopecks()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+bool operator==(const Money& h, const Money& p) {
+    if (h.getrubles() == p.getrubles()) {
+        if (h.getkopecks() == p.getkopecks()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    return false;
+}
+ostream& operator<<(ostream& out, Money& p) {
+    out << "Рублей:" << p.getrubles() << "Копеек:" << p.getkopecks();
+        return out;
+}
+istream& operator>>(istream& in, Money& p) {
+    int long a;
+    int b;
+    cout << "Рублей";
+    in >> a;
+    cout << "Копеек";
+    in >> b;
+    p.setinfo(a, b);
+    return in;
+}
+fstream& operator<<(fstream& fout, Money& p) {
+    fout << "Рублей:" << p.getrubles() << "Копеек:" << p.getkopecks(); 
+    return fout;
+}
+fstream& operator>>(fstream& fin, Money& p) {
+    int long a;
+    int b;
+    cout << "Рублей";
+    fin >> a;
+    cout << "Копеек";
+    fin >> b;
+    p.setinfo(a, b);
+    return fin;
+}
+//file_work.h
+#pragma once
+#include "Money.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+int make_file(const char* f_name)
+{
+	fstream stream(f_name, ios::out | ios::trunc);//открытьдлязаписи 
+	if(!stream)
+		return -1;//ошибка открытия файла
+	int n;
+	Money p;
+	cout << "N?";
+	cin >> n; 
+	for (int i = 0; i < n; i++)
+	{
+		cin >> p;//ввод атрибутов объекта из стандартного потока 
+		stream<<p<<"\n";//запись объекта в файловый поток
+	}
+	stream.close();//закрыть поток
+	return n;//вернуть количество записанных бъектов
+}
+int print_file(const char* f_name)
+{
+	fstream stream(f_name, ios::in);//открыть для чтения 
+	if(!stream)
+		return -1;//ошибка открытия файла
+	string temp;
+	int i = 0; 
+	while (stream >> temp)
+	{
+		cout << temp << endl;
+		i++;
+	}
+	stream.close();
+	return i;
+}
+int del_file(const char* f_name, int k)
+{
+	fstream temp("temp", fstream::out);//открыть для записи
+	fstream stream(f_name,fstream::in);//открыть для чтения
+	if(!stream)
+		return -1;//ошибка открытия файла
+	int i = 0;
+	string p;
+	while (stream >> p)//пока нет конца файла выполняем чтениеобъекта
+	{
+		//если прочитан при знакконца файла,то выход из цикла 
+		if (stream.eof())
+			break;
+		i++;
+		//если номер объекта не равен k,то записываем его во вспомогательый файл
+		if (i != k)
+			temp << p << endl;
+	}
+	//закрыть файлы 
+	stream.close();
+	temp.close();
+	remove(f_name);//удалить старый файл 
+	rename("temp",f_name);//переименовать temp 
+	return i;//количество прочитанных
+}
+int add_file(const char* f_name, int k, Money pp)
+
+{
+	fstream temp("temp", ios::out);//открытьдлязаписи 
+	fstream stream(f_name,ios::in);//открытьдлячтения 
+	if(!stream)
+		return -1;//ошибка открытия файла
+	string p; 
+	int i = 0, l = 0; 
+	while (stream >> p)
+	{
+		if (stream.eof())
+			break;
+		i++;
+		if (i == k)
+		{
+			temp << pp << endl;//записатьвtempновуюзапись 
+			l++;
+		}
+		temp << p << endl;
+	}
+	stream.close(); 
+	temp.close(); 
+	remove(f_name); 
+	rename("temp", f_name);
+	return l;//количестводобавленных
+}
+int add_end(const char* f_name, Money pp)
+{
+	fstream stream(f_name, ios::app);//открытьдлядобавления 
+	if(!stream)
+		return -1;//ошибка открытия файла
+	stream << pp;//записатьновуюзапись 
+	return 1;
+}
+int change_file(const char* f_name, int k, Money pp)
+{
+	fstream temp("temp", ios::out);//открытьдлязаписи 
+	fstream stream(f_name,ios::in);//открытьдлячтения 
+	if(!stream)
+		return -1;//ошибка открытия файла
+	string p; 
+	int i = 0, l = 0;
+	char x; 
+	while (stream >> p)
+	{
+		if (stream.eof())
+			break;
+		i++;
+		if (i == k)
+		{
+			temp << pp << endl;
+			l++;
+
+		}
+		else
+			temp << p <<endl;
+	}
+	stream.close(); 
+	temp.close(); 
+	remove(f_name); 
+	rename("temp", f_name);
+	return l;//количествоизмененныхэлементов
+}
