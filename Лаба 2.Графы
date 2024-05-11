@@ -1,0 +1,284 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+
+template <class T>
+
+class Graph
+{
+public:
+	vector<T> vertexList;//Вектор вершин 
+	vector < vector<int>> adjMatrix;//Матрица смежности 
+	int maxSize;//Размер вектора вершин и матрицы смежности
+	Graph() {
+		maxSize = 0;
+	}
+	inline Graph(const int& size)
+	{
+		this->maxSize = size;
+		this->adjMatrix = vector<vector<T>>(size, vector<T>(size));
+		for (int i = 0; i < this->maxSize; ++i)
+		{
+			for (int j = 0; j < this->maxSize; ++j)
+			{
+				this->adjMatrix[i][j] = 0;
+			};
+		};
+	};
+	inline bool isFull()
+	{
+		return this->vertexList.size() == this->maxSize;
+	};
+	bool isEmpty()
+	{
+		return (this->vertexList.size() == 0);
+	}
+	inline void insertVertex(const T& vert)
+	{
+		if (this->isFull())
+		{
+			cout << "Невозможно добвать вершину." << endl;
+			return;
+		};
+		this->vertexList.push_back(vert);
+
+	};
+	inline int GetVertPos(const T& v)
+	{
+		for (int i = 0; i < this->vertexList.size(); ++i)
+		{
+			if (this->vertexList[i] == v)
+			{
+				return i;
+			}
+		}
+		return -1;
+
+	};
+	inline int GetAmountVerts()
+
+	{
+		return this->vertexList.size();
+	};
+	inline int GetWeight(const T& v1, const T& v2)
+	{
+		if (this->isEmpty())
+		{
+			return 0;
+		};
+		int v1_p = this->GetVertPos(v1);
+		int v2_p = this->GetVertPos(v2);
+
+		if (v1_p == -1 || v2_p == -1)
+		{
+			cout << "Одного из узлов в графе не существует." << endl;
+			return 0;
+		};
+		return this->adjMatrix[v1_p][v2_p];
+	};
+	vector<T> GetNbrs(const T& vertex) {
+		std::vector<T> nbrsList; // создание списка соседей
+		int pos = this->GetVertPos(vertex); /* вычисление позиции vertex в матрице смежности */
+		if (pos != -1)
+		{ /* проверка, что vertex есть в матрице смежности */
+			for (int i = 0; i < this->vertexList.size(); ++i)
+			{
+				if (this->adjMatrix[pos][i] != 0)
+				{
+					nbrsList.push_back(this->vertexList[i]);
+				}
+			}
+		} return nbrsList; // возврат списка соседей
+	};
+	void InsertEdge(const T& vertex1, const T& vertex2, int weight = 1) {
+		if (GetVertPos(vertex1) != (-1) && this->GetVertPos(vertex2) != (-1)) {
+			int vertPos1 = GetVertPos(vertex1);
+			int vertPos2 = GetVertPos(vertex2);
+
+			if (this->adjMatrix[vertPos1][vertPos2] != 0 && this->adjMatrix[vertPos2][vertPos1] != 0)
+			{
+				cout << "Ребро между вершинами уже есть" << endl;
+				return;
+			}
+			else
+			{
+				this->adjMatrix[vertPos1][vertPos2] = weight;
+				this->adjMatrix[vertPos2][vertPos1] = weight;
+			}
+		}
+		else
+		{
+			cout << "Обеих вершин (или одной из них) нет в графе " << endl;
+			return;
+		}
+	};
+	void Print() {
+		if (!(this->isEmpty()))
+		{
+			cout << "Матрица смежности графа: " << endl;
+			printf("%s","    ");
+			printf("%c",' ');
+			for (int i = 0; i < vertexList.size(); ++i)
+			{
+				printf("%5d ", vertexList[i]);
+			}
+			cout << endl;
+			for (int i = 0; i < vertexList.size(); i++)
+			{
+				printf("%5d", vertexList[i]);
+				for (int j = 0; j < vertexList.size(); j++)
+					printf("%5d ", this->adjMatrix[i][j]);
+				printf("\n");
+			}
+		}
+		else {
+			cout << "Граф пуст " << endl;
+		}
+	}
+	int GetAmountEdges()
+	{
+		int amount = 0;
+		if (!this->IsEmpty())
+		{
+			for (int i = 0; i < this->vertList.size(); ++i)
+			{
+				for (int j = 0; j < this->vertList.size(); ++j)
+				{
+					if (this->adjMatrix[i][j] != 0)
+					{
+						amount++;
+					}
+
+				}
+			}
+		}
+		return amount / 2;
+	}
+	void algorithm(int& minindex, int& min, int amountVerts, vector<T>& verh, vector<T>& minSize)
+	{
+		do {
+			minindex = 10000;
+			min = 10000;
+			int temp;
+			for (int i = 0; i < amountVerts; i++)
+			{ // Если вершину ещё не обошли и вес меньше min
+				if ((verh[i] == 1) && (minSize[i] < min))
+				{ // Переприсваиваем значения
+					min = minSize[i];
+					minindex = i;
+				}
+			}
+			// Добавляем найденный минимальный вес
+			// к текущему весу вершины
+			// и сравниваем с текущим минимальным весом вершины
+			if (minindex != 10000)
+			{
+				for (int i = 0; i < amountVerts; i++)
+				{
+					if (this->adjMatrix[minindex][i] > 0)
+					{
+						temp = min + this->adjMatrix[minindex][i];
+						if (temp < minSize[i])
+						{
+							minSize[i] = temp;
+						}
+					}
+				}
+				verh[minindex] = 0;
+			}
+		}
+		while (minindex < 10000);
+	}
+	int RestorationPath(vector<int>& ver, int begin_index, vector<int>& minSize, int amountVerts) {
+		int end;// индекс конечной вершины 
+		cout << endl << "Введите конец:";
+		cin >> end;
+		end -= 1;// индекс конечной вершины = end - 1
+		ver[0] = end + 1; // начальный элемент - конечная вершина
+		int k = 1; // индекс предыдущей вершины
+		int weight = minSize[end]; // вес конечной вершины
+
+		while (end != begin_index) // пока не дошли до начальной вершины
+		{
+			for (int i = 0; i < amountVerts; i++) // просматриваем все вершины
+				if (this->adjMatrix[i][end] != 0)   // если связь есть
+				{
+					int temp = weight - this->adjMatrix[i][end]; // определяем вес пути из предыдущей вершины
+					if (temp == minSize[i]) // если вес совпал с рассчитанным
+					{                 // значит из этой вершины и был переход
+						weight = temp; // сохраняем новый вес
+						end = i;       // сохраняем предыдущую вершину
+						ver[k] = i + 1; // и записываем ее в массив
+						k++;
+					}
+				}
+		}
+		return k;
+	}
+
+};
+int main() {
+	system("chcp 1251");
+	system("cls");
+	int amountVerts = 0, amountEdges = 0, vertex = 0, sourceVertex = 0, targetVertex = 0, edgeweight = 0;
+	cout << "Введите количество вершин графа: ";
+	cin >> amountVerts;
+	cout << endl;
+	cout << "Введите количество ребер графа: ";
+	cin >> amountEdges;
+	cout << endl;
+	Graph<int> graph(amountVerts);
+	for (int i = 0; i < amountVerts; ++i) {
+		cout << "Вершина: ";
+		cin >> vertex;
+		graph.insertVertex(vertex);
+		cout << endl;
+	}
+	for (int i = 0; i < amountEdges; ++i) {
+		cout << "Исходная вершина: ";
+		cin >> sourceVertex;
+		cout << endl;
+		cout << "Конечная вершина: ";
+		cin >> targetVertex;
+		cout << endl;
+		cout << "Bec ребра: ";
+		cin >> edgeweight;
+		cout << endl;
+		graph.InsertEdge(sourceVertex, targetVertex, edgeweight);
+	}
+	cout << endl;
+	graph.Print();
+	cout << "_______________________________";
+	vector<int> minSize(amountVerts); // минимальное расстояние d
+	vector<int> verh(amountVerts); // посещенные вершины v
+	vector<int> ver(amountVerts); // массив посещенных вершин
+	int temp = 0, minindex = 10000, min = 10000;
+	int begin_index = 0;
+	int end = 0; // индекс конечной вершины 
+
+	//Инициализация вершин и расстояний
+	cout << "1";
+	for (int i = 0; i < amountVerts; i++)
+	{
+		minSize[i] = 10000;
+		verh[i] = 1;
+	}
+	cout << "2";
+	minSize[begin_index] = 0;
+	// Шаг алгоритма
+	cout << "3";
+	graph.algorithm(minindex, min, amountVerts, verh, minSize);
+	// Вывод кратчайших расстояний до вершин
+	cout << "4";
+	printf("\nКратчайшие расстояния до вершин: \n");
+	for (int i = 0; i < amountVerts; i++)
+		printf("%5d ", minSize[i]);
+	// Восстановление пути
+	int k = graph.RestorationPath(ver, begin_index, minSize, amountVerts);
+	printf("\nВывод кратчайшего пути\n");
+	for (int i = k - 1; i >= 0; i--)
+		printf("%3d ", ver[i]);
+	return 0;
+}
