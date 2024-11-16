@@ -1,2 +1,0 @@
-a = int(input())
-print('Нечетное') if a % 2 else print('Четное')
