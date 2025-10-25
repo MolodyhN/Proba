@@ -7,3 +7,4 @@ C:\Users\Никита\source\repos\Лаба1.0 GID\obj\Debug\Лаба1.0 GID.csp
 C:\Users\Никита\source\repos\Лаба1.0 GID\obj\Debug\Лаба1.0 GID.csproj.CoreCompileInputs.cache
 C:\Users\Никита\source\repos\Лаба1.0 GID\obj\Debug\Лаба1.0 GID.exe
 C:\Users\Никита\source\repos\Лаба1.0 GID\obj\Debug\Лаба1.0 GID.pdb
+C:\Users\Никита\source\repos\Лаба1.0 GID\obj\Debug\Лаба1.0 GID.exe.config

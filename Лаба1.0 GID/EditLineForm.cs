@@ -15,7 +15,7 @@ namespace Лаба1._0_GID
         private NumericUpDown widthNumeric;
         private ComboBox styleComboBox;
 
-        public EditLineForm(Line line)
+        public EditLineForm(Line3D line)
         {
             InitializeComponents();
             colorComboBox.SelectedItem = line.Color.Name;
